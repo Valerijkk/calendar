@@ -1,0 +1,49 @@
+<!-- calendar.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Календарь</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+<div class="bg-white rounded-xl shadow p-6 w-full max-w-md">
+    <div class="flex justify-between items-center mb-4">
+        <button id="prev" class="px-3 py-1 bg-indigo-500 text-white rounded">&lt;</button>
+        <h2 id="monthYear" class="text-lg font-semibold"></h2>
+        <button id="next" class="px-3 py-1 bg-indigo-500 text-white rounded">&gt;</button>
+    </div>
+    <div id="calendar" class="grid grid-cols-7 gap-1 text-center text-sm">
+        <!-- дни недели + числа заполнятся скриптом -->
+    </div>
+</div>
+<script>
+    const cal = document.getElementById('calendar'),
+        title = document.getElementById('monthYear'),
+        prev = document.getElementById('prev'),
+        next = document.getElementById('next');
+    let dt = new Date();
+    const days = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+    function render(){
+        cal.innerHTML = '';
+        title.textContent = dt.toLocaleDateString('ru', { year: 'numeric', month: 'long' });
+        // дни недели
+        days.forEach(d=> cal.innerHTML += `<div class="font-medium">${d}</div>`);
+        const firstDay = new Date(dt.getFullYear(), dt.getMonth(), 1).getDay();
+        const daysInMonth = new Date(dt.getFullYear(), dt.getMonth()+1, 0).getDate();
+        // пустые ячейки
+        for(let i=0;i<firstDay;i++) cal.innerHTML += `<div></div>`;
+        // числа
+        for(let d=1;d<=daysInMonth;d++){
+            cal.innerHTML += `<div class="py-2 rounded hover:bg-indigo-100 ${
+                d===new Date().getDate() && dt.getMonth()===new Date().getMonth()?'bg-indigo-200':''
+            }">${d}</div>`;
+        }
+    }
+    prev.onclick = ()=>{ dt.setMonth(dt.getMonth()-1); render(); };
+    next.onclick = ()=>{ dt.setMonth(dt.getMonth()+1); render(); };
+    render();
+</script>
+</body>
+</html>
